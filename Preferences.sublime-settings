@@ -1,0 +1,20 @@
+{
+	"auto_match_enabled": false,
+	"caret_extra_width": 1,
+	"color_scheme": "Packages/User/Ancient Pond.sublime-color-scheme",
+	"detect_indentation": true,
+	"draw_white_space": "all",
+	"font_face": "Monoid Retina",
+	"font_size": 12,
+	"highlight_line": false,
+	"highlight_modified_tabs": true,
+	"ignored_packages":
+	[
+	],
+	"line_numbers": true,
+	"tab_size": 4,
+	"theme": "Adaptive.sublime-theme",
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": true,
+	"word_separators": "./\\()\"':,.;<>~!@#$%^&*|+=[]{}`~?"
+}
