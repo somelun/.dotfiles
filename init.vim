@@ -25,8 +25,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'itchyny/lightline.vim'
 Plug 'BurntSushi/ripgrep'
 Plug 'preservim/nerdcommenter'
-" Plug 'tpope/vim-fugitive'
-" Plug 'lyuts/vim-rtags'
+Plug 'tpope/vim-fugitive'
 Plug 'ycm-core/YouCompleteMe'
 Plug 'mbbill/undotree'
 
@@ -34,8 +33,17 @@ call plug#end()
 
 
 colorscheme darktheme
-" let g:lightline = { 'colorscheme': 'bluewery' }
-" set noshowmode
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
+set noshowmode
 
 
 " bind command %:h to %%
@@ -51,7 +59,7 @@ let g:netrw_list_hide= '.DS_Store'
 
 let g:netrw_altv = 1
 
-" augroup ProjectDrawer
-"   autocmd!
-"   autocmd VimEnter * :Vexplore
-" augroup END
+" let clangd fully control code completion
+let g:ycm_clangd_uses_ycmd_caching = 0
+" use installed clangd, not YCM-bundled clangd which doesn't get updates.
+let g:ycm_clangd_binary_path = exepath("clangd")
