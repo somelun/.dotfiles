@@ -31,6 +31,10 @@ Plug 'mbbill/undotree'
 
 call plug#end()
 
+if executable('rg')
+    let g:rg_derive_root='true'
+endif
+
 
 colorscheme darktheme
 let g:lightline = {
@@ -63,3 +67,15 @@ let g:netrw_altv = 1
 let g:ycm_clangd_uses_ycmd_caching = 0
 " use installed clangd, not YCM-bundled clangd which doesn't get updates.
 let g:ycm_clangd_binary_path = exepath("clangd")
+
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>k :wincmd k<CR>
+nnoremap <leader>l :wincmd l<CR>
+
+nnoremap <leader>u :UndotreeShow<CR>
+
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+
+nnoremap <silent> <leader>gd :YcmCompleter GoTo<CR>
+nnoremap <silent> <leader>gf :YcmCompleter FixIt<CR>
