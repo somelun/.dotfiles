@@ -52,12 +52,15 @@ Plug 'preservim/nerdcommenter'
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'ziglang/zig.vim''
+if has("nvim")
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'nvim-lua/completion-nvim'
+endif
+Plug 'ziglang/zig.vim'
 Plug 'mbbill/undotree'
 call plug#end()
 
+if has("nvim")
 :lua << EOF
     local lspconfig = require('lspconfig')
 
@@ -79,7 +82,10 @@ set completeopt=menuone,noinsert,noselect
 
 " Enable completions as you type
 let g:completion_enable_auto_popup = 0
+endif
 
+let g:fzf_preview_window = []
+let g:fzf_layout = { 'down': '~25%' }
 
 " ripgrep settings
 if executable('rg')
@@ -151,16 +157,13 @@ nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
-nnoremap <silent> <C-P> :Buffers<CR>
-nnoremap <silent> <C-p> :Files<CR>
+nnoremap <silent> <leader>o :Buffers<CR>
+nnoremap <silent> <leader>O :Files<CR>
 
 nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>ps :Rg<space>
 
 noremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
-
-nnoremap <silent> <leader>gd :YcmCompleter GoTo<CR>
-nnoremap <silent> <leader>gf :YcmCompleter FixIt<CR>
 
 nmap <F1> <nop>
 nnoremap <silent> <C-l> :<C-u>noh<CR><C-l>
