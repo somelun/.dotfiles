@@ -11,8 +11,12 @@ set smartindent
 set belloff=all
 
 set nu
-set nowrap
+set wrap
+set linebreak
+set nolist
+set ignorecase
 set smartcase
+
 
 set noswapfile
 set nobackup
@@ -29,7 +33,7 @@ set background=dark
 colorscheme PaperColor
 
 set list
-set listchars=tab:>-,trail:·"
+set listchars=tab:>-,trail:¬∑"
 
 " different font size for macvim
 if has('gui_macvim')
@@ -56,6 +60,7 @@ if has("nvim")
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/completion-nvim'
 endif
+Plug 'MattesGroeger/vim-bookmarks'
 Plug 'ziglang/zig.vim'
 Plug 'mbbill/undotree'
 call plug#end()
@@ -70,34 +75,36 @@ if has("nvim")
     end
 
     local servers = {'zls', 'clangd'}
-    for _, lsp in ipairs(servers) do 
+    for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
             on_attach = on_attach,
         }
     end
 EOF
 
-" Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
+set completeopt=menuone,noinsert,noselect   " set completeopt to have a better completion experience
+let g:completion_enable_auto_popup = 0      " disable completions as you type
 
-" Enable completions as you type
-let g:completion_enable_auto_popup = 0
 endif
 
-let g:fzf_preview_window = []
-let g:fzf_layout = { 'down': '~25%' }
+" fzf settings
+let g:fzf_preview_window = []           " no preview
+let g:fzf_layout = { 'down': '~25%' }   " window position and size
 
 " ripgrep settings
 if executable('rg')
     let g:rg_derive_root='true'
 endif
 
+" vim-bookmarks
+" let g:bookmark_no_default_key_mappings = 1
+
 " bind command %:h to %%
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
-" netrw
-let g:netrw_banner = 0
-let g:netrw_liststyle = 0
+" netrw settings
+let g:netrw_banner = 1
+let g:netrw_liststyle = 1
 let g:netrw_browse_split = 0    " open file in the same tab
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
@@ -105,13 +112,15 @@ let g:netrw_sort_by = "exten"
 let g:netrw_list_hide = '.DS_Store'
 let g:netrw_list_hide .=',\(^\|\s\s\)\zs\.\S+'
 
+
+" custom netrw toggle
 let g:NetrwIsOpen=0
 function! ToggleNetrw()
   if g:NetrwIsOpen
     let i = bufnr("$")
       while (i >= 1)
         if (getbufvar(i, "&filetype") == "netrw")
-          silent exe "bwipeout " . i 
+          silent exe "bwipeout " . i
         endif
         let i-=1
       endwhile
@@ -130,35 +139,27 @@ function! OpenVSplit()
     :normal <C-l>
 endfunction
 
-" function! NetrwMappings()
-"   noremap <buffer> V :call OpenVSplit()<CR>
-   noremap <silent> <C-E> :call ToggleNetrw()<CR>
-" endfunction
+noremap <silent> <C-E> :call ToggleNetrw()<CR>
+" ~custom netrw toggle
 
-" autogroup netrw_mappings
-"     autocmd!
-"     autocmd filetype netrw call NetrwMappings()
-" autogroup END
+set mouse=a                         " enable mouse support
+set mousemodel=popup                " right mouse button pop ups a menu
+set mousehide                       " hide mouse when typing text
 
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
-" Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDCommentEmptyLines = 1
-" Enable NERDCommenterToggle to check all selected lines is commented or not
-let g:NERDToggleCheckAllLines = 1
+" nerd comment settings
+let g:NERDSpaceDelims = 1           " Add spaces after comment delimiters by default
+let g:NERDDefaultAlign = 'left'     " Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDCommentEmptyLines = 1     " Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDToggleCheckAllLines = 1   " Enable NERDCommenterToggle to check all selected lines is commented or not
 
-" command! Qbuffers call setqflist(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), '{"bufnr":v:val}'))
 
-" remap keys
-
+" keys remap
 nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
-nnoremap <silent> <leader>o :Buffers<CR>
-nnoremap <silent> <leader>O :Files<CR>
+nnoremap <silent> <C-p> :Buffers<CR>
+nnoremap <silent> <C-g> :Files<CR>
 
 nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>ps :Rg<space>
