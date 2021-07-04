@@ -17,7 +17,6 @@ set nolist
 set ignorecase
 set smartcase
 
-
 set noswapfile
 set nobackup
 set undodir=~/.config/nvim/undodir
@@ -33,12 +32,11 @@ set background=dark
 colorscheme PaperColor
 
 set list
-set listchars=tab:>-,trail:¬∑"
+set listchars=tab:>-,trail:·"
 
 " different font size for macvim
 if has('gui_macvim')
     set guifont=Menlo\ Regular:h15"
-    " set guifont=Monoid\ Retina:h14
     let macvim_skip_colorscheme=1"
     " removes both scrollbars
     set guioptions=
@@ -69,15 +67,26 @@ if has("nvim")
 :lua << EOF
     local lspconfig = require('lspconfig')
 
-    local on_attach = function(_, bufnr)
-        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-        require('completion').on_attach()
+    local on_attach = function(client, bufnr)
+        local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+        local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+        --Enable completion triggered by <c-x><c-o>
+        buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+        -- Mappings.
+        local opts = { noremap=true, silent=true }
+
+        -- See `:help vim.lsp.*` for documentation on any of the below functions
+        buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+        buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     end
 
-    local servers = {'zls', 'clangd'}
+    local servers = { "clangd", "zls" }
     for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
             on_attach = on_attach,
+            autostart = false,
         }
     end
 EOF
@@ -85,7 +94,7 @@ EOF
 set completeopt=menuone,noinsert,noselect   " set completeopt to have a better completion experience
 let g:completion_enable_auto_popup = 0      " disable completions as you type
 
-endif
+endif " has("nvim")
 
 " fzf settings
 let g:fzf_preview_window = []           " no preview
