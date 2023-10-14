@@ -29,7 +29,7 @@ set incsearch
 set t_Co=256
 
 set background=dark
-colorscheme PaperColor
+colorscheme gruvbox
 
 set list
 set listchars=tab:>-,trail:·"
@@ -61,7 +61,28 @@ endif
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'ziglang/zig.vim'
 Plug 'mbbill/undotree'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'ericcurtin/CurtineIncSw.vim'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'morhetz/gruvbox'
 call plug#end()
+
+"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
+"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+if (empty($TMUX) && getenv('TERM_PROGRAM') != 'Apple_Terminal')
+  if (has("nvim"))
+    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+endif
 
 if has("nvim")
 :lua << EOF
@@ -97,7 +118,8 @@ let g:completion_enable_auto_popup = 0      " disable completions as you type
 endif " has("nvim")
 
 " fzf settings
-let g:fzf_preview_window = []           " no preview
+" let g:fzf_preview_window = []           " no preview
+let g:fzf_preview_window = ['right,50%', 'ctrl-/']
 let g:fzf_layout = { 'down': '~25%' }   " window position and size
 
 " ripgrep settings
@@ -121,6 +143,9 @@ let g:netrw_sort_by = "exten"
 let g:netrw_list_hide = '.DS_Store'
 let g:netrw_list_hide .=',\(^\|\s\s\)\zs\.\S+'
 
+map <leader>tn :tabnew<cr>
+map <leader>t<leader> :tabnext
+map <leader>tc :tabclose<cr>
 
 " custom netrw toggle
 let g:NetrwIsOpen=0
@@ -160,20 +185,30 @@ let g:NERDSpaceDelims = 1           " Add spaces after comment delimiters by def
 let g:NERDDefaultAlign = 'left'     " Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDCommentEmptyLines = 1     " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDToggleCheckAllLines = 1   " Enable NERDCommenterToggle to check all selected lines is commented or not
-
+let g:NERDCustomDelimiters = {'c': { 'left': '//', 'right': '', 'leftAlt': '//' }}
 
 " keys remap
 nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
+
+" fzf remaps
 nnoremap <silent> <C-p> :Buffers<CR>
 nnoremap <silent> <C-g> :Files<CR>
+
+" close buffer but keep the window
+map <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
 
 nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>ps :Rg<space>
 
 noremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 
+map <F5> :call CurtineIncSw()<CR>
+
 nmap <F1> <nop>
 nnoremap <silent> <C-l> :<C-u>noh<CR><C-l>
+
+" clang format with Ctrl+K
+map <C-K> :pyf /usr/local/opt/llvm/share/clang/clang-format.py<cr>
