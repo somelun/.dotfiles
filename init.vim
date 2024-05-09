@@ -52,11 +52,13 @@ let mapleader=" "
 call plug#begin('~/.config/nvim/plugged')
 Plug 'preservim/nerdcommenter'
 Plug 'jremmen/vim-ripgrep'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
 if has("nvim")
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/completion-nvim'
+    Plug 'nvim-lua/plenary.nvim'  " telescope requirement
+    Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.6' }
 endif
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'ziglang/zig.vim'
@@ -123,9 +125,9 @@ let g:fzf_preview_window = ['right,50%', 'ctrl-/']
 let g:fzf_layout = { 'down': '~25%' }   " window position and size
 
 " ripgrep settings
-if executable('rg')
-    let g:rg_derive_root='true'
-endif
+" if executable('rg')
+"     let g:rg_derive_root='true'
+" endif
 
 " vim-bookmarks
 " let g:bookmark_no_default_key_mappings = 1
@@ -186,6 +188,12 @@ let g:NERDDefaultAlign = 'left'     " Align line-wise comment delimiters flush l
 let g:NERDCommentEmptyLines = 1     " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDToggleCheckAllLines = 1   " Enable NERDCommenterToggle to check all selected lines is commented or not
 let g:NERDCustomDelimiters = {'c': { 'left': '//', 'right': '', 'leftAlt': '//' }}
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fw <cmd>Telescope grep_string<cr>
 
 " keys remap
 nnoremap <leader>h :wincmd h<CR>
