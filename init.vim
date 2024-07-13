@@ -62,11 +62,11 @@ if has("nvim")
 endif
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'ziglang/zig.vim'
-Plug 'mbbill/undotree'
-Plug 'ekalinin/Dockerfile.vim'
+" Plug 'mbbill/undotree'
+" Plug 'ekalinin/Dockerfile.vim'
 Plug 'ericcurtin/CurtineIncSw.vim'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'morhetz/gruvbox'
 call plug#end()
 
@@ -88,8 +88,6 @@ endif
 
 if has("nvim")
 :lua << EOF
-    local lspconfig = require('lspconfig')
-
     local on_attach = function(client, bufnr)
         local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -98,20 +96,28 @@ if has("nvim")
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
         -- Mappings.
-        local opts = { noremap=true, silent=true }
+        local opts = { noremap = true, silent = true }
 
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
         buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     end
 
-    local servers = { "clangd", "zls" }
-    for _, lsp in ipairs(servers) do
-        lspconfig[lsp].setup {
-            on_attach = on_attach,
-            autostart = false,
-        }
-    end
+    require('lspconfig').clangd.setup {
+        on_attach = on_attach,
+        autostart = false,
+        filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp" },
+        init_option = { fallbackFlags = { "-std=c++17" } }
+    }
+
+    require('lspconfig').zls.setup {
+        on_attach = on_attach,
+        autostart = false,
+        filetypes = { "zig" },
+        cmd = {
+            "/Users/lun/work/zig/zls/zls",
+        },
+   }
 EOF
 
 set completeopt=menuone,noinsert,noselect   " set completeopt to have a better completion experience
@@ -121,8 +127,8 @@ endif " has("nvim")
 
 " fzf settings
 " let g:fzf_preview_window = []           " no preview
-let g:fzf_preview_window = ['right,50%', 'ctrl-/']
-let g:fzf_layout = { 'down': '~25%' }   " window position and size
+" let g:fzf_preview_window = ['right,50%', 'ctrl-/']
+" let g:fzf_layout = { 'down': '~25%' }   " window position and size
 
 " ripgrep settings
 " if executable('rg')
@@ -195,17 +201,25 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fw <cmd>Telescope grep_string<cr>
 
-" keys remap
+lua << EOF
+require('telescope').setup{
+  defaults = {
+    initial_mode = "normal",
+  }
+}
+EOF
+
+" keys remap "
 nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
 
-" fzf remaps
+" fzf remaps "
 nnoremap <silent> <C-p> :Buffers<CR>
 nnoremap <silent> <C-g> :Files<CR>
 
-" close buffer but keep the window
+" close buffer but keep the window "
 map <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
 
 nnoremap <leader>u :UndotreeShow<CR>
@@ -218,5 +232,5 @@ map <F5> :call CurtineIncSw()<CR>
 nmap <F1> <nop>
 nnoremap <silent> <C-l> :<C-u>noh<CR><C-l>
 
-" clang format with Ctrl+K
+" clang format with Ctrl+K "
 map <C-K> :pyf /usr/local/opt/llvm/share/clang/clang-format.py<cr>
