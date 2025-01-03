@@ -60,7 +60,7 @@ if has("nvim")
     Plug 'nvim-lua/plenary.nvim'  " telescope requirement
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.6' }
 endif
-Plug 'MattesGroeger/vim-bookmarks'
+" Plug 'MattesGroeger/vim-bookmarks'
 Plug 'ziglang/zig.vim'
 " Plug 'mbbill/undotree'
 " Plug 'ekalinin/Dockerfile.vim'
@@ -125,16 +125,6 @@ let g:completion_enable_auto_popup = 0      " disable completions as you type
 
 endif " has("nvim")
 
-" fzf settings
-" let g:fzf_preview_window = []           " no preview
-" let g:fzf_preview_window = ['right,50%', 'ctrl-/']
-" let g:fzf_layout = { 'down': '~25%' }   " window position and size
-
-" ripgrep settings
-" if executable('rg')
-"     let g:rg_derive_root='true'
-" endif
-
 " vim-bookmarks
 " let g:bookmark_no_default_key_mappings = 1
 
@@ -181,19 +171,23 @@ function! OpenVSplit()
     :normal <C-l>
 endfunction
 
+" custom netrw toggle
 noremap <silent> <C-E> :call ToggleNetrw()<CR>
-" ~custom netrw toggle
 
 set mouse=a                         " enable mouse support
 set mousemodel=popup                " right mouse button pop ups a menu
 set mousehide                       " hide mouse when typing text
 
 " nerd comment settings
+" let g:NERDCreateDefaultMappings = 0 " Disable default hotkeys
 let g:NERDSpaceDelims = 1           " Add spaces after comment delimiters by default
 let g:NERDDefaultAlign = 'left'     " Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDCommentEmptyLines = 1     " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDToggleCheckAllLines = 1   " Enable NERDCommenterToggle to check all selected lines is commented or not
 let g:NERDCustomDelimiters = {'c': { 'left': '//', 'right': '', 'leftAlt': '//' }}
+
+map <C-/> <Plug>NERDCommenterToggle
+
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
