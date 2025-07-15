@@ -39,9 +39,12 @@ set incsearch
 
 " set t_Co=256
 
+set termguicolors
+
 " color scheme
 set background=dark
-colorscheme gruvbox
+colorscheme mood2214
+" colorscheme gruvbox
 
 " what trailing symbols we need to see
 set list
@@ -94,9 +97,6 @@ if has("nvim")
         on_attach = on_attach,
         autostart = false,
         filetypes = { "zig" },
-        cmd = {
-            "/Users/lun/work/zig/zls/zls",
-        },
 }
 EOF
 
@@ -161,9 +161,9 @@ nnoremap <leader>fw <cmd>Telescope grep_string<cr>
 " telescope default is normal mode
 :lua << EOF
 require('telescope').setup{
- defaults = {
-   initial_mode = "normal",
- }
+    defaults = {
+        initial_mode = "normal",
+    }
 }
 EOF
 
@@ -172,6 +172,9 @@ nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
+
+" mapping shift U to undo undo
+nnoremap U <C-R>
 
 " close buffer but keep the window "
 map <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
@@ -184,3 +187,13 @@ map <F5> :call CurtineIncSw()<CR>
 nmap <F1> <nop>
 " clears selections
 nnoremap <silent> <C-l> :<C-u>noh<CR><C-l>
+
+" indent settings
+set foldmethod=syntax
+set foldlevelstart=99
+
+" disable arrow keys so I don't use them
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
