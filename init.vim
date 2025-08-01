@@ -153,7 +153,7 @@ let g:NERDCustomDelimiters = {'c': { 'left': '//', 'right': '', 'leftAlt': '//' 
 map <C-/> <Plug>NERDCommenterToggle
 
 " Find files using Telescope command-line sugar.
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>ff :lua require('telescope.builtin').find_files({find_command = { 'find', '.', '-type', 'f', '!', '-path', './build/*' }})<CR>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fw <cmd>Telescope grep_string<cr>
