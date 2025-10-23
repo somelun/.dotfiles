@@ -70,34 +70,52 @@ Plug 'morhetz/gruvbox'
 call plug#end()
 
 if has("nvim")
-:lua << EOF
+lua << EOF
     local on_attach = function(client, bufnr)
         local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-        --Enable completion triggered by <c-x><c-o>
+        -- Enable completion triggered by <c-x><c-o>
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        -- Mappings.
+        -- Mappings
         local opts = { noremap = true, silent = true }
-
-        -- See `:help vim.lsp.*` for documentation on any of the below functions
         buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
         buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     end
 
-    require('lspconfig').clangd.setup {
-        on_attach = on_attach,
-        autostart = false,
-        filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp" },
-        init_option = { fallbackFlags = { "-std=c++17" } }
-    }
+    -- Use new API if available (Neovim ≥ 0.11)
+    if vim.lsp and vim.lsp.enable then
+        vim.lsp.config.clangd = {
+            cmd = { "clangd" },
+            autostart = false,
+            filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp" },
+            on_attach = on_attach,
+            init_option = { fallbackFlags = { "-std=c++17" } },
+        }
 
-    require('lspconfig').zls.setup {
-        on_attach = on_attach,
-        autostart = false,
-        filetypes = { "zig" },
-}
+        vim.lsp.config.zls = {
+            cmd = { "zls" },
+            autostart = false,
+            filetypes = { "zig" },
+            on_attach = on_attach,
+        }
+
+    else
+        -- Backward compatibility (Neovim < 0.11)
+        require('lspconfig').clangd.setup {
+            on_attach = on_attach,
+            autostart = false,
+            filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp" },
+            init_option = { fallbackFlags = { "-std=c++17" } }
+        }
+
+        require('lspconfig').zls.setup {
+            on_attach = on_attach,
+            autostart = false,
+            filetypes = { "zig" },
+        }
+    end
 EOF
 
 set completeopt=menuone,noinsert,noselect   " set completeopt to have a better completion experience
