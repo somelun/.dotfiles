@@ -10,6 +10,13 @@ set expandtab
 set smartindent
 set belloff=all
 
+" run local .nvimrc file from the project directory
+set exrc
+set secure
+
+" when there are errors after :make open quickfix
+autocmd QuickFixCmdPost [^l]* cwindow
+
 set nu
 set wrap
 set linebreak
