@@ -147,9 +147,9 @@ let g:netrw_list_hide = '.DS_Store'
 let g:netrw_list_hide .=',\(^\|\s\s\)\zs\.\S\+'
 
 " tabs things
-map <leader>tn :tabnew<cr>
-map <leader>t<leader> :tabnext
-map <leader>tc :tabclose<cr>
+nnoremap <leader>tn :tabnew<CR>
+nnoremap <leader>t<leader> :tabnext
+nnoremap <leader>tc :tabclose<CR>
 
 " custom netrw toggle
 let g:NetrwIsOpen=0
@@ -170,10 +170,12 @@ function! ToggleNetrw()
 endfunction
 
 " custom netrw toggle
-noremap <silent> <C-E> :call ToggleNetrw()<CR>
+nnoremap <silent> <C-E> :call ToggleNetrw()<CR>
 
 " comment.nvim: default gcc / gc mappings are set up automatically by
 " require('Comment').setup() above (see plug#end block).
+" NOTE: these two stay as nmap/vmap (recursive) on purpose — <Plug>
+" mappings require a recursive map to trigger correctly.
 " Extra hotkeys for Ctrl+/ and Cmd+/ to match other editors:
 nmap <C-/> <Plug>(comment_toggle_linewise_current)
 vmap <C-/> <Plug>(comment_toggle_linewise_visual)
@@ -184,9 +186,9 @@ endif
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff :lua require('telescope.builtin').find_files({find_command = { 'find', '.', '-type', 'f', '!', '-path', './build/*' }})<CR>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fw <cmd>Telescope grep_string<cr>
+nnoremap <leader>fg <Cmd>Telescope live_grep<CR>
+nnoremap <leader>fb <Cmd>Telescope buffers<CR>
+nnoremap <leader>fw <Cmd>Telescope grep_string<CR>
 
 " telescope default is normal mode
 :lua << EOF
@@ -206,15 +208,15 @@ nnoremap <leader>l :wincmd l<CR>
 " mapping shift U to undo undo
 nnoremap U <C-R>
 
-" close buffer but keep the window "
-map <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
+" close buffer but keep the window
+nnoremap <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
 
 nnoremap <leader>ps :Rg<space>
 
-map <F5> :call CurtineIncSw()<CR>
+nnoremap <F5> :call CurtineIncSw()<CR>
 
 " make sure F1 does nothing
-nmap <F1> <nop>
+nnoremap <F1> <Nop>
 " clears selections
 nnoremap <silent> <C-l> :<C-u>noh<CR><C-l>
 
