@@ -14,12 +14,13 @@ set belloff=all
 set exrc
 set secure
 
-set nu
 set wrap
 set linebreak
-set nolist
 set ignorecase
 set smartcase
+
+" yanks/deletes to goes the system clipboard
+set clipboard=unnamedplus
 
 set mouse=a                 " enable mouse support
 set mousemodel=popup        " right mouse button pop ups a menu
@@ -226,3 +227,6 @@ noremap <Up> <Nop>
 noremap <Down> <Nop>
 noremap <Left> <Nop>
 noremap <Right> <Nop>
+
+" quick switch for the color scheme
+nnoremap <leader>bg :let &background = (&background ==# 'dark' ? 'light' : 'dark')<CR>
