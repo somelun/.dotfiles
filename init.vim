@@ -14,9 +14,6 @@ set belloff=all
 set exrc
 set secure
 
-" when there are errors after :make open quickfix
-autocmd QuickFixCmdPost [^l]* cwindow
-
 set nu
 set wrap
 set linebreak
@@ -28,10 +25,16 @@ set mouse=a                 " enable mouse support
 set mousemodel=popup        " right mouse button pop ups a menu
 set mousehide               " hide mouse when typing text
 
-" enable relative line numbers in normal and visual modes
-autocmd InsertLeave,WinEnter * set relativenumber
-" enable absolute line numbers in insert mode
-autocmd InsertEnter,WinLeave * set norelativenumber
+augroup vimrc_autocmds
+    autocmd!
+    " when there are errors after :make open quickfix
+    autocmd QuickFixCmdPost [^l]* cwindow
+    " enable relative line numbers in normal and visual modes
+    autocmd InsertLeave,WinEnter * set relativenumber
+    " enable absolute line numbers in insert mode
+    autocmd InsertEnter,WinLeave * set norelativenumber
+augroup END
+
 " ensure line numbers are always on
 set number
 
@@ -55,7 +58,7 @@ colorscheme mood2214
 
 " what trailing symbols we need to see
 set list
-set listchars=tab:>-,trail:·"
+set listchars=tab:>-,trail:·
 
 " redefine leader key
 let mapleader=" "
@@ -98,7 +101,7 @@ lua << EOF
             autostart = false,
             filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp" },
             on_attach = on_attach,
-            init_option = { fallbackFlags = { "-std=c++17" } },
+            init_options = { fallbackFlags = { "-std=c++17" } },
         }
 
         vim.lsp.config.zls = {
@@ -114,7 +117,7 @@ lua << EOF
             on_attach = on_attach,
             autostart = false,
             filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp" },
-            init_option = { fallbackFlags = { "-std=c++17" } }
+            init_options = { fallbackFlags = { "-std=c++17" } }
         }
 
         require('lspconfig').zls.setup {
@@ -140,7 +143,7 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 20
 let g:netrw_sort_by = "exten"
 let g:netrw_list_hide = '.DS_Store'
-let g:netrw_list_hide .=',\(^\|\s\s\)\zs\.\S+'
+let g:netrw_list_hide .=',\(^\|\s\s\)\zs\.\S\+'
 
 " tabs things
 map <leader>tn :tabnew<cr>
