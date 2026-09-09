@@ -65,10 +65,11 @@ let mapleader=" "
 
 " vim-plug settings
 call plug#begin('~/.config/nvim/plugged')
-Plug 'preservim/nerdcommenter'
 Plug 'jremmen/vim-ripgrep'
 if has("nvim")
+    Plug 'numToStr/Comment.nvim'
     Plug 'neovim/nvim-lspconfig'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-lua/plenary.nvim'  " telescope requirement
     Plug 'nvim-telescope/telescope.nvim'
 endif
@@ -77,6 +78,9 @@ Plug 'ericcurtin/CurtineIncSw.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'morhetz/gruvbox'
 call plug#end()
+lua << EOF
+require('Comment').setup()
+EOF
 
 if has("nvim")
 lua << EOF
@@ -167,14 +171,15 @@ endfunction
 " custom netrw toggle
 noremap <silent> <C-E> :call ToggleNetrw()<CR>
 
-" nerd comment settings
-let g:NERDSpaceDelims = 1           " Add spaces after comment delimiters by default
-let g:NERDDefaultAlign = 'left'     " Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDCommentEmptyLines = 1     " Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDToggleCheckAllLines = 1   " Enable NERDCommenterToggle to check all selected lines is commented or not
-let g:NERDCustomDelimiters = {'c': { 'left': '//', 'right': '', 'leftAlt': '//' }}
-" custom hotkey for the toggle comment
-map <C-/> <Plug>NERDCommenterToggle
+" comment.nvim: default gcc / gc mappings are set up automatically by
+" require('Comment').setup() above (see plug#end block).
+" Extra hotkeys for Ctrl+/ and Cmd+/ to match other editors:
+nmap <C-/> <Plug>(comment_toggle_linewise_current)
+vmap <C-/> <Plug>(comment_toggle_linewise_visual)
+if has("nvim-0.9")
+    nmap <D-/> <Plug>(comment_toggle_linewise_current)
+    vmap <D-/> <Plug>(comment_toggle_linewise_visual)
+endif
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff :lua require('telescope.builtin').find_files({find_command = { 'find', '.', '-type', 'f', '!', '-path', './build/*' }})<CR>
