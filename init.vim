@@ -69,9 +69,8 @@ Plug 'preservim/nerdcommenter'
 Plug 'jremmen/vim-ripgrep'
 if has("nvim")
     Plug 'neovim/nvim-lspconfig'
-    Plug 'nvim-lua/completion-nvim'
     Plug 'nvim-lua/plenary.nvim'  " telescope requirement
-    Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.6' }
+    Plug 'nvim-telescope/telescope.nvim'
 endif
 Plug 'ziglang/zig.vim'
 Plug 'ericcurtin/CurtineIncSw.vim'
@@ -127,9 +126,6 @@ lua << EOF
         }
     end
 EOF
-
-set completeopt=menuone,noinsert,noselect   " set completeopt to have a better completion experience
-let g:completion_enable_auto_popup = 0      " disable completions as you type
 endif " has("nvim")
 
 " bind command %:h to %%
