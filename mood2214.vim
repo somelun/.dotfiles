@@ -8,7 +8,7 @@ let g:colors_name = "mood2214"
 let s:dark = {
       \ 'bg':      '#282828', 'bg1':   '#3c3836', 'bg2':    '#504945',
       \ 'fg':      '#ebdbb2', 'fg2':   '#d5c4a1', 'gray':   '#928374',
-      \ 'red':     '#fb4934', 'green': '#b8bb26', 'yellow': '#fabd2f',
+      \ 'red':     '#fb4934', 'green': '#c9cc35', 'yellow': '#fabd2f',
       \ 'blue':    '#83a598', 'purple':'#d3869b', 'orange': '#fe8019',
       \ 'linenr':  '#7c6f64',
       \ }
@@ -16,7 +16,7 @@ let s:dark = {
 let s:light = {
       \ 'bg':      '#fbf1c7', 'bg1':   '#ebdbb2', 'bg2':    '#d5c4a1',
       \ 'fg':      '#3c3836', 'fg2':   '#504945', 'gray':   '#7c6f64',
-      \ 'red':     '#9d0006', 'green': '#79740e', 'yellow': '#b57614',
+      \ 'red':     '#9d0006', 'green': '#4d7c0f', 'yellow': '#b57614',
       \ 'blue':    '#076678', 'purple':'#8f3f71', 'orange': '#af3a03',
       \ 'linenr':  '#a89984',
       \ }
@@ -32,23 +32,41 @@ function! s:apply()
   execute 'highlight CursorLineNr guifg='.c.yellow.' guibg='.c.bg
   execute 'highlight CursorLine   guibg='.c.bg1
 
+  " --- syntax: small palette, like the asm look ---
+  " code itself stays plain fg; colour only for comments, strings,
+  " literals and control flow / directives.
+  execute 'highlight Mood2214Plain guifg='.c.fg.' gui=NONE cterm=NONE'
+
   execute 'highlight Comment      guifg='.c.gray.' cterm=italic gui=italic'
   execute 'highlight String       guifg='.c.green
-  execute 'highlight Keyword      guifg='.c.red
-  execute 'highlight Statement    guifg='.c.red
-  execute 'highlight Type         guifg='.c.yellow
-  execute 'highlight CustomTypes  guifg='.c.yellow
-
   execute 'highlight Constant     guifg='.c.purple
-  execute 'highlight Identifier   guifg='.c.fg2
-  execute 'highlight Function     guifg='.c.blue
+  execute 'highlight Statement    guifg='.c.red
+  execute 'highlight Keyword      guifg='.c.red
+  execute 'highlight PreProc      guifg='.c.red
+  execute 'highlight Type         guifg='.c.red
+  highlight! link StorageClass Type
+  highlight! link Structure    Type
+  highlight! link Typedef      Type
+  highlight! link CustomTypes  Type
+
+  " format specifiers / escapes look like the rest of the string
+  highlight! link Character   String
+  highlight! link SpecialChar String
+  " macros (TRACK_MAGIC, NULL...) look like constants
+  highlight! link Macro       Constant
+
+  " everything else is just text
+  for g in ['Identifier', 'Function', 'Special', 'Delimiter', 'Operator',
+        \ '@variable', '@variable.member', '@property', '@module',
+        \ '@lsp.type.variable', '@lsp.type.parameter', '@lsp.type.property']
+    execute 'highlight! link '.g.' Mood2214Plain'
+  endfor
 
   execute 'highlight Cursor       guibg='.c.red
   execute 'highlight iCursor      guibg='.c.red
   execute 'highlight Visual       guifg='.c.bg.' guibg='.c.red
+  execute 'highlight MatchParen   guifg='.c.red.' guibg='.c.bg2.' gui=bold cterm=bold'
 
-  execute 'highlight PreProc      guifg='.c.orange
-  execute 'highlight Special      guifg='.c.orange
   execute 'highlight Error        guifg='.c.bg.' guibg='.c.red
 endfunction
 
