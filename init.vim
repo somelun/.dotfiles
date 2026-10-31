@@ -102,18 +102,20 @@ lua << EOF
     if vim.lsp and vim.lsp.enable then
         vim.lsp.config.clangd = {
             cmd = { "clangd" },
-            autostart = false,
             filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp" },
+            root_markers = { "compile_commands.json", ".clangd", ".git" },
             on_attach = on_attach,
             init_options = { fallbackFlags = { "-std=c++17" } },
         }
 
         vim.lsp.config.zls = {
             cmd = { "zls" },
-            autostart = false,
             filetypes = { "zig" },
+            root_markers = { "build.zig", ".git" },
             on_attach = on_attach,
         }
+
+        vim.lsp.enable({ "clangd", "zls" })
 
     else
         -- Backward compatibility (Neovim < 0.11)
@@ -185,7 +187,8 @@ if has("nvim-0.9")
 endif
 
 " Find files using Telescope command-line sugar.
-nnoremap <leader>ff :lua require('telescope.builtin').find_files({find_command = { 'find', '.', '-type', 'f', '!', '-path', './build/*' }})<CR>
+" rg --files skips hidden files/dot-directories and respects .gitignore
+nnoremap <leader>ff :lua require('telescope.builtin').find_files({find_command = { 'rg', '--files', '--glob', '!build/' }})<CR>
 nnoremap <leader>fg <Cmd>Telescope live_grep<CR>
 nnoremap <leader>fb <Cmd>Telescope buffers<CR>
 nnoremap <leader>fw <Cmd>Telescope grep_string<CR>
